@@ -1,18 +1,15 @@
 name: Sync Leetcode
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual trigger
   schedule:
-    - cron: "0 8 * * 6" # Runs automatically every Saturday
+    - cron: "0 8 * * *" # Runs automatically every day
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Sync
-        uses: joshcai/leetcode-sync@v1.7
+        uses: joshcai/leetcode-sync@v1.5
         with:
           github-token: ${{ github.token }}
           leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
           leetcode-session: ${{ secrets.LEETCODE_SESSION }}
-          destination-folder: solutions
-          verbose: true
-          commit-header: "[LeetCode Sync]"
