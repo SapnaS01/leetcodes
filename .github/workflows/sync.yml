@@ -1,13 +1,10 @@
 name: Sync Leetcode
-
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual trigger
   schedule:
-    - cron: "30 9 * * *"
-
+    - cron: "30 9 * * *" # Runs automatically every day
 permissions:
   contents: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Sync LeetCode
-        uses: joshcai/leetcode-sync@main
+        uses: joshcai/leetcode-sync@v1.4
         with:
           github-token: ${{ github.token }}
           leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
