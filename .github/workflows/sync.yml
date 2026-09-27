@@ -1,28 +1,22 @@
 name: Sync Leetcode
+
 on:
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch:
   schedule:
-    - cron: "30 9 * * *" # Runs automatically every day
+    - cron: "30 9 * * *"
+
 permissions:
   contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Prepare LeetCode Sync action
-        uses: actions/checkout@v5
-        with:
-          repository: joshcai/leetcode-sync
-          ref: 6749b872e89b3c10d213a6e599a7424584c1fa10
-          path: .github/actions/leetcode-sync
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Handle empty LeetCode submission responses
-        working-directory: .github/actions/leetcode-sync
-        run: |
-          node -e "const fs=require('fs'); const file='dist/index.js'; let source=fs.readFileSync(file,'utf8'); const submissionLoop='for (const submission of response.data.data.submissionList.submissions)'; const safeSubmissionLoop='for (const submission of response.data?.data?.submissionList?.submissions ?? [])'; const pagination='response.data.data.submissionList.hasNext'; const safePagination='response.data?.data?.submissionList?.hasNext === true'; if (!source.includes(submissionLoop) || !source.includes(pagination)) throw new Error('Unexpected leetcode-sync bundle'); source=source.replace(submissionLoop,safeSubmissionLoop).replace(pagination,safePagination); fs.writeFileSync(file,source);"
-
-      - name: Sync
-        uses: ./.github/actions/leetcode-sync
+      - name: Sync LeetCode
+        uses: joshcai/leetcode-sync@main
         with:
           github-token: ${{ github.token }}
           leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
